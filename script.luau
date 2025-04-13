@@ -185,7 +185,7 @@ end
 
 local function chatted(plr, message)
 	
-	if plr.Name == "ItsSpaceManPlays" or plr == altOwner then
+	if plr.Name == "ItsSpaceManPlays" or plr.Name == "PostOfficeUpgrader2" or plr == altOwner then
 		
 		local stuff = string.split(message, " ")
 		local args = table.clone(stuff)
