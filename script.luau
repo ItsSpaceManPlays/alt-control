@@ -185,7 +185,7 @@ end
 
 local function chatted(plr, message)
 	
-	if plr.Name == "ItsSpaceManPlays" or plr.Name == "PostOfficeUpgrader2" or plr == altOwner then
+	if plr.Name == "ItsSpaceManPlays" or plr == altOwner then
 		
 		local stuff = string.split(message, " ")
 		local args = table.clone(stuff)
@@ -219,7 +219,7 @@ RunService.RenderStepped:Connect(function(dt)
 	
 	local hrp = getMyHrp()
 	if hrp then
-		hrp.CFrame = hrp.CFrame + CFrame.Angles(0, math.rad(spinSpeed * dt), 0)
+		hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(spinSpeed * dt), 0)
 	end
 	
 end)
