@@ -212,12 +212,22 @@ for _, plr in pairs(Players:GetPlayers()) do
 end
 
 RunService.RenderStepped:Connect(function(dt)
+
+	local humanoid = getMyHumanoid()
 	
 	if spinSpeed <= 0 then
 		return
+		if humanoid then
+			humanoid.AutoRotate = true
+		end
 	end
 	
 	local hrp = getMyHrp()
+
+	if humanoid then
+		humanoid.AutoRotate = false
+	end
+
 	if hrp then
 		hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(spinSpeed * dt), 0)
 	end
