@@ -177,7 +177,13 @@ local function doCommand(executor, cmd, args)
 
 	elseif cmd == "/spin" then
 
-		spinSpeed = if args[1] then tonumber(args[1]) else 30
+		local targetSpeed = args[1]
+		if not targetSpeed or targetSpeed == "" then
+			print("bad")
+			return
+		end
+		
+		spinSpeed = tonumber(targetSpeed) or 100
 
 	end
 
@@ -215,7 +221,7 @@ RunService.RenderStepped:Connect(function(dt)
 
 	local humanoid = getMyHumanoid()
 
-	if spinSpeed <= 0 then
+	if spinSpeed < 0 or spinSpeed == 0 then
 		if humanoid then
 			humanoid.AutoRotate = true
 		end
