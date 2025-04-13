@@ -20,25 +20,25 @@ local function getPlayerByName(partialName)
 end
 
 local function getMyHrp()
-	
+
 	if lPlayer.Character then
 		local hrp = lPlayer.Character:FindFirstChild("HumanoidRootPart")
 		if hrp then
 			return hrp
 		end
 	end
-	
+
 end
 
 local function getMyHumanoid()
-	
+
 	if lPlayer.Character then
 		local humanoid = lPlayer.Character:FindFirstChild("Humanoid")
 		if humanoid then
 			return humanoid
 		end
 	end
-	
+
 end
 
 local safePart = Instance.new("Part")
@@ -51,44 +51,44 @@ safePart.Color = Color3.fromRGB(255, 255, 255)
 safePart.Parent = workspace
 
 local function doCommand(executor, cmd, args)
-	
+
 	if not args then args = {} end
-	
+
 	print(cmd, "args", table.concat(args, ", "))
-	
+
 	if cmd == "/tphere" then
-		
+
 		local executorCFrame
-		
+
 		if executor.Character then
 			local eHrp = executor.Character:FindFirstChild("HumanoidRootPart")
 			if eHrp then
 				executorCFrame = eHrp.CFrame
 			end
 		end
-		
+
 		if not executorCFrame then return end
-		
+
 		local char = lPlayer.Character
 		if char then
-			
+
 			local hrp = char:FindFirstChild("HumanoidRootPart")
 			if hrp then
-				
+
 				plrToFollow = nil
 				hrp.CFrame = executorCFrame + executorCFrame.LookVector * 5
-				
+
 			end
-			
+
 		end
-		
+
 	elseif cmd == "/teleport" then
-		
+
 		local targetName = args[1] or ""
 		local target = getPlayerByName(targetName)
-		
+
 		if not target then return end
-		
+
 		local targetCFrame
 
 		if target.Character then
@@ -97,70 +97,70 @@ local function doCommand(executor, cmd, args)
 				targetCFrame = tHrp.CFrame
 			end
 		end
-		
+
 		if not targetCFrame then return end
-		
+
 		local char = lPlayer.Character
 		if char then
 
 			local hrp = char:FindFirstChild("HumanoidRootPart")
 			if hrp then
-				
+
 				plrToFollow = nil
 				hrp.CFrame = targetCFrame
 
 			end
 
 		end
-		
+
 	elseif cmd == "/follow" then
-		
+
 		local targetName = args[1] or ""
 		local target = getPlayerByName(targetName)
-		
+
 		if not target and targetName == "me" then
 			target = executor
 		end
-		
+
 		plrToFollow = target
-		
+
 	elseif cmd == "/to" then
-		
+
 		local targetName = args[1] or ""
 		local target = getPlayerByName(targetName)
-		
+
 		if target then
-			
+
 			altOwner = target
 			print("set ownership to", target.Name)
-			
+
 		end
-		
+
 	elseif cmd == "/safepart" then
-		
+
 		local hrp = getMyHrp()
 		if hrp then
-			
+
 			plrToFollow = nil
 			hrp.CFrame = safePart.CFrame + Vector3.yAxis * 20
-			
+
 		end
-		
+
 	elseif cmd == "/shutdown" then
-		
+
 		lPlayer:Kick("shutdown")
-		
+
 	elseif cmd == "/vfling" then
-		
+
 		local hrp = getMyHrp()
 		local humanoid = getMyHumanoid()
-		
+
 		if not hrp or not humanoid then
 			return
 		end
-		
+
 		local seatPart = humanoid.SeatPart
-		
+
 		if not seatPart then
 			for _, v in pairs(workspace:GetDescendants()) do
 				if v:IsA("VehicleSeat") then
@@ -170,39 +170,39 @@ local function doCommand(executor, cmd, args)
 				end
 			end
 		end
-		
+
 		local ancestorModel = seatPart:FindFirstAncestorWhichIsA("Model")
-		
+
 		ancestorModel:PivotTo(safePart.CFrame + Vector3.yAxis * 30)
-		
+
 	elseif cmd == "/spin" then
-		
+
 		spinSpeed = if args[1] then tonumber(args[1]) else 30
-		
+
 	end
-	
+
 end
 
 local function chatted(plr, message)
-	
+
 	if plr.Name == "ItsSpaceManPlays" or plr.Name == "PostOfficeUpgrader2" or plr == altOwner then
-		
+
 		local stuff = string.split(message, " ")
 		local args = table.clone(stuff)
 		table.remove(args, 1)
-		
+
 		doCommand(plr, stuff[1], args)
-		
+
 	end
-	
+
 end
 
 Players.PlayerAdded:Connect(function(plr)
-	
+
 	plr.Chatted:Connect(function(message, recipient)
 		chatted(plr, message)
 	end)
-	
+
 end)
 
 for _, plr in pairs(Players:GetPlayers()) do
@@ -214,14 +214,15 @@ end
 RunService.RenderStepped:Connect(function(dt)
 
 	local humanoid = getMyHumanoid()
-	
+
 	if spinSpeed <= 0 then
-		return
 		if humanoid then
 			humanoid.AutoRotate = true
 		end
+
+		return
 	end
-	
+
 	local hrp = getMyHrp()
 
 	if humanoid then
@@ -231,11 +232,11 @@ RunService.RenderStepped:Connect(function(dt)
 	if hrp then
 		hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(spinSpeed * dt), 0)
 	end
-	
+
 end)
 
 while true do
-	
+
 	task.wait()
 
 	local cf = nil
@@ -260,9 +261,9 @@ while true do
 	end
 
 	if ourHrp and cf then
-		
+
 		ourHrp.CFrame = cf + cf.LookVector * -3
-		
+
 	end
 
 end
