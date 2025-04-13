@@ -1,9 +1,11 @@
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
 local lPlayer = Players.LocalPlayer
 
 local plrToFollow = nil
 local altOwner = nil
+local spinSpeed = 0
 
 local function getPlayerByName(partialName)
 	partialName = partialName:lower()
@@ -173,6 +175,10 @@ local function doCommand(executor, cmd, args)
 		
 		ancestorModel:PivotTo(safePart.CFrame + Vector3.yAxis * 30)
 		
+	elseif cmd == "/spin" then
+		
+		spinSpeed = if args[1] then tonumber(args[1]) else 30
+		
 	end
 	
 end
@@ -204,6 +210,19 @@ for _, plr in pairs(Players:GetPlayers()) do
 		chatted(plr, msg)
 	end)
 end
+
+RunService.RenderStepped:Connect(function(dt)
+	
+	if spinSpeed <= 0 then
+		return
+	end
+	
+	local hrp = getMyHrp()
+	if hrp then
+		hrp.CFrame = hrp.CFrame + CFrame.Angles(0, math.rad(spinSpeed * dt), 0)
+	end
+	
+end)
 
 while true do
 	
