@@ -114,8 +114,13 @@ local function doCommand(executor, cmd, args)
 		end
 
 	elseif cmd == "/follow" then
+		
+		if not args[1] or args[1] == "" then
+			plrToFollow = nil
+			return
+		end
 
-		local targetName = args[1] or ""
+		local targetName = args[1]
 		local target = getPlayerByName(targetName)
 
 		if not target and targetName == "me" then
