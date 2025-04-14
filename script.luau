@@ -156,6 +156,17 @@ local function doCommand(executor, cmd, args)
 		lPlayer:Kick("shutdown")
 
 	elseif cmd == "/vfling" then
+		
+		local target = plrToFollow
+		if not target then
+			target = getPlayerByName(args[1])
+		end
+		
+		if not target then
+			return
+		end
+		
+		plrToFollow = target
 
 		local hrp = getMyHrp()
 		local humanoid = getMyHumanoid()
@@ -175,10 +186,64 @@ local function doCommand(executor, cmd, args)
 				end
 			end
 		end
+		
+	elseif cmd == "/vkill" then
+		
+		local humanoid = getMyHumanoid()
+		local hrp = getMyHrp()
+		if not humanoid or not hrp then
+			return
+		end
+		
+		local seatPart = humanoid.SeatPart
+		if not seatPart or not seatPart:IsA("VehicleSeat") then
+			for _, v in pairs(workspace:GetDescendants()) do
 
+				if v:IsA("VehicleSeat") and v.Occupant == nil then
+					seatPart = v
+					v:Sit(humanoid)
+				end
+
+			end
+		end
+		
+		if not seatPart then
+			return
+		end
+		
+		local target = getPlayerByName(args[1])
+		
+		if not target then
+			return
+		end
+		
+		local targetHrp = nil
+		if target.Character then
+			targetHrp = target.Character:FindFirstChild("HumanoidRootPart")
+		end
+		
+		if not targetHrp then
+			return
+		end
+		
+		local startCFrame = hrp.CFrame
 		local ancestorModel = seatPart:FindFirstAncestorWhichIsA("Model")
+		
+		task.wait(0.7)
+		
+		local targetCFrame = targetHrp.CFrame
+		
+		ancestorModel:PivotTo(targetCFrame)
+		
+		task.wait(1)
 
-		ancestorModel:PivotTo(safePart.CFrame + Vector3.yAxis * 30)
+		ancestorModel:PivotTo(CFrame.new(10000, workspace.FallenPartsDestroyHeight + 100, 10000))
+		
+		task.wait(0.95)
+		
+		humanoid.Sit = false
+		
+		hrp.CFrame = startCFrame
 
 	elseif cmd == "/spin" then
 
